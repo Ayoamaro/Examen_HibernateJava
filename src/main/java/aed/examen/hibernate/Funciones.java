@@ -23,6 +23,10 @@ public class Funciones {
 	private static String pattern = "yyyy-MM-dd";
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 	
+	/*
+	 * --- INSERTAR CATEGORÍAS ---
+	 * Insercción las distintas categorías en la base de datos
+	 */
 	public static void insertarCategorias() {
 
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -39,6 +43,10 @@ public class Funciones {
 		sesion.close();
 	}
 
+	/*
+	 * --- INSERTAR COMPONENTES ---
+	 * Insercción de un componente en la base de datos
+	 */
 	public static void insertarComponenteSinDescripcion() throws ParseException {
 
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -57,6 +65,10 @@ public class Funciones {
 		sesion.close();
 	}
 	
+	/*
+	 * --- INSERTAR COMPONENTES CON DESCRIPCIÓN ---
+	 * Insercción de un componente con descripcion en la base de datos
+	 */
 	public static void insertarComponenteConDescripcion() throws ParseException {
 
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -80,24 +92,36 @@ public class Funciones {
 		sesion.close();
 	}
 	
+	/*
+	 * --- BORRAR COMPONENTE ---
+	 * Borrado de un componente existente en la base de datos
+	 */
 	public static void eliminarComponente(String codComponente) {
 
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
 		Query q = sesion.createQuery("from Componentes where codComponente = " + codComponente);
+		Query s = sesion.createQuery("from DesComponente where codComponente = " + codComponente);
 		
 		try {
 			sesion.beginTransaction();
-			Componentes consulta = (Componentes) q.getSingleResult();
-			sesion.delete(consulta);
+			Componentes consulta1 = (Componentes) q.getSingleResult();
+			DesComponente consulta2 = (DesComponente) s.getSingleResult();
+			sesion.delete(consulta1);
+			sesion.delete(consulta2);
 			sesion.getTransaction().commit();
+			System.out.println("Componente eliminado");
 		} catch (Exception e) {
 			sesion.getTransaction().rollback();
-			System.out.println(e);
+			System.out.println("Componente NO eliminado");
 		}
 		sesion.close();
 		
 	}
 	
+	/*
+	 * --- MOSTRAR CATEGORÍAS ---
+	 * Mostrado de todas las categorías de la base de datos
+	 */
 	public static void listarCategorias() {
 		
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -126,6 +150,10 @@ public class Funciones {
 		sesion.close();
 	}
 
+	/*
+	 * --- MOSTRAR COMPONENTES ---
+	 * Mostrado de todos los componentes junto con su descripción de la base de datos 
+	 */
 	public static void listarComponentes() {
 		
 		Session sesion = HibernateUtil.getSessionFactory().openSession();
